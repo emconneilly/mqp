@@ -1,0 +1,7 @@
+True Labels
+[1. 1. 1. 1. 1.]
+Predicted Labels
+[ 1  1  1  1 -1]
+True Positives,0,False Positives,0
+False Negatives,1,True Negatives,4
+Recall,0.8,Precision,1.0,Accuracy,0.8
