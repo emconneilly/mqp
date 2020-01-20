@@ -10,15 +10,31 @@ trainRaw = input()
 #Prep data
 train = api.prepFile(trainRaw)
 
+#Explain parameters
+print("This model requires some parameters to be set. These include a kernel, gamma, and nu.")
+print("Would you like these to be explained in more detail? (y/n)")
+explain = input()
+if explain = 'y':
+    print("The kernel is the function the model will use to transform the data if it needs to be fit in a higher dimension.")
+    print("When the data does not need to be fit in a higher dimension, a linear kernel will fit the data as is.\n")
+    print("Gamma is a representation of the impact of each training value on the model's fit.")
+    print("A higher gamma means each value has less influence and a lower gamma means each value has more influence.\n")
+    print("Nu is the upper bound of the proportion of training values that the model can label as an incorrect group.\n")
+
 #Get parameters
+print("Some parameters have been chosen through iterative testing as defaults.")
+print("The default parameters are kernel=rbf, gamma=1/number of features, nu=0.2")
 print('Would you like to use the default parameters? (y/n) ')
 default = input()
 if default == 'n':
     print('What would you like to set as the kernel? ')
+    print("The options are linear, poly, rbf, or sigmoid")
     kernel = input()
     print('What would you like to use for gamma? ')
+    print("It should be a number in the range (0,1]")
     gamma = float(input())
-    print('What would you like to use for nu? ')
+    print('What would you like to use for nu?')
+    print("It must be a number in the range (0,1]")
     nu = float(input())
 elif default == 'y':
     kernel = 'rbf'
