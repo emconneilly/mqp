@@ -377,18 +377,19 @@ def train(preppedData, configName):
 def testData(model, preppedData, labelFile):
     labels = np.loadtxt(labelFile, delimiter= ',')
     prediction = model.predict(preppedData)
-    
-    print('Test Results:')
-    print('True Labels: ' + str(labels))
-    print('Predicted Labels: ' + str(prediction))
     truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
-    print('True Positives: ' + str(truePos))
-    print('True Negatives: ' + str(trueNeg))
-    print('False Positives: ' + str(falsePos))
-    print('False Negatives: ' + str(falseNeg))
-    print('Recall: ' + str(recall_score(labels, prediction)))
-    print('Precision: ' + str(precision_score(labels, prediction)))
-    print('Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg)))
+
+    s1 = 'Test Results:'
+    s2 = '<br>True Labels: ' + str(labels)
+    s3 = '<br>Predicted Labels: ' + str(prediction)
+    s4 = '<br>True Positives: ' + str(truePos)
+    s5 = '<br>True Negatives: ' + str(trueNeg)
+    s6 = '<br>False Positives: ' + str(falsePos)
+    s7 = '<br>False Negatives: ' + str(falseNeg)
+    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
+    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
+    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
+    return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
     
 def testSelfWeb(model, preppedData, numSequences):
     labels = []
@@ -398,16 +399,15 @@ def testSelfWeb(model, preppedData, numSequences):
     truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
 
     s1 = 'Test Results:'
-    s2 = '\nTrue Labels: ' + str(labels)
-    s3 = '\n<br>Predicted Labels: ' + str(prediction)
-    truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
-    s4 = '\nTrue Positives: ' + str(truePos)
-    s5 = '\nTrue Negatives: ' + str(trueNeg)
-    s6 = '\nFalse Positives: ' + str(falsePos)
-    s7 = '\nFalse Negatives: ' + str(falseNeg)
-    s8 = '\nRecall: ' + str(recall_score(labels, prediction))
-    s9 = '\nPrecision: ' + str(precision_score(labels, prediction))
-    s10 = '\nAccuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
+    s2 = '<br>True Labels: ' + str(labels)
+    s3 = '<br>Predicted Labels: ' + str(prediction)
+    s4 = '<br>True Positives: ' + str(truePos)
+    s5 = '<br>True Negatives: ' + str(trueNeg)
+    s6 = '<br>False Positives: ' + str(falsePos)
+    s7 = '<br>False Negatives: ' + str(falseNeg)
+    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
+    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
+    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
     return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
 
 #Creates a config file
