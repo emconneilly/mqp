@@ -278,94 +278,6 @@ def getHighPKA(aa):
     else:
         return ''
 
-def getPropA(aa):
-    if aa == 'a':
-        return '1.42'
-    elif aa == 'r':
-        return '0.98'
-    elif aa == 'n':
-        return '0.67'
-    elif aa == 'd':
-        return '1.01'
-    elif aa == 'c':
-        return '0.70'
-    elif aa == 'e':
-        return '1.11'
-    elif aa == 'q':
-        return '1.51'
-    elif aa == 'g':
-        return '0.57'
-    elif aa == 'h':
-        return '1.00'
-    elif aa == 'i':
-        return '1.08'
-    elif aa == 'l':
-        return '1.21'
-    elif aa == 'k':
-        return '1.16'
-    elif aa == 'm':
-        return '1.45'
-    elif aa == 'f':
-        return '1.13'
-    elif aa == 'p':
-        return '0.57'
-    elif aa == 's':
-        return '0.77'
-    elif aa == 't':
-        return '0.83'
-    elif aa == 'w':
-        return '1.08'
-    elif aa == 'y':
-        return '0.69'
-    elif aa == 'v':
-        return '1.06'
-    else:
-        return ''
-
-def getPropB(aa):
-    if aa == 'a':
-        return '0.83'
-    elif aa == 'r':
-        return '0.93'
-    elif aa == 'n':
-        return '0.89'
-    elif aa == 'd':
-        return '0.54'
-    elif aa == 'c':
-        return '1.19'
-    elif aa == 'e':
-        return '1.10'
-    elif aa == 'q':
-        return '0.37'
-    elif aa == 'g':
-        return '0.75'
-    elif aa == 'h':
-        return '0.87'
-    elif aa == 'i':
-        return '1.60'
-    elif aa == 'l':
-        return '1.30'
-    elif aa == 'k':
-        return '0.74'
-    elif aa == 'm':
-        return '1.05'
-    elif aa == 'f':
-        return '1.38'
-    elif aa == 'p':
-        return '0.55'
-    elif aa == 's':
-        return '0.75'
-    elif aa == 't':
-        return '1.19'
-    elif aa == 'w':
-        return '1.37'
-    elif aa == 'y':
-        return '1.47'
-    elif aa == 'v':
-        return '1.70'
-    else:
-        return ''
-
 # Takes in the filename of the dataset, filename of the labels, and training parameters
 # Returns a dataframe of the dataset features and the model
 def prepFile(dataFile):
@@ -398,47 +310,14 @@ def prepFile(dataFile):
             currSeq = []
 
     np.asarray(allSeq)
-    return allSeq
+    return allSeq, numSequences
 
-#removing high+low pka
-def prepFileDel(dataFile):
-    sequences = open(dataFile, 'r')
-    reader = csv.reader(sequences, delimiter=',')
+def prepText(dataFile):
+    reader = dataFile.split(', ')
     data = []
     numSequences = 0
     for row in reader:
-        sequence = row[0].lower()
-        aa = 0
-        while aa<10:
-            data.append([numSequences, 0, aa, getHydropathy(sequence[aa])])
-            data.append([numSequences, 1, aa, getIP(sequence[aa])])
-            data.append([numSequences, 2, aa, getMW(sequence[aa])])
-            data.append([numSequences, 3, aa, getNumPKA(sequence[aa])])
-            aa+= 1
-        numSequences+= 1
-
-    sequences.close()
-
-    df = pd.DataFrame(data, columns= ['seqID', 'dimension', 'aaNum', 'value'])
-    currSeq = []
-    allSeq = []
-    for row in df.index:
-        currSeq.append(float(df['value'][row]))
-        if df['aaNum'][row] == 9 and df['dimension'][row] == 3:
-            allSeq.append(np.asarray(currSeq))
-            currSeq = []
-
-    np.asarray(allSeq)
-    return allSeq
-
-#adding prop A+B
-def prepFileAdd(dataFile):
-    sequences = open(dataFile, 'r')
-    reader = csv.reader(sequences, delimiter=',')
-    data = []
-    numSequences = 0
-    for row in reader:
-        sequence = row[0].lower()
+        sequence = row.lower()
         aa = 0
         while aa<10:
             data.append([numSequences, 0, aa, getHydropathy(sequence[aa])])
@@ -447,45 +326,8 @@ def prepFileAdd(dataFile):
             data.append([numSequences, 3, aa, getNumPKA(sequence[aa])])
             data.append([numSequences, 4, aa, getLowPKA(sequence[aa])])
             data.append([numSequences, 5, aa, getHighPKA(sequence[aa])])
-            data.append([numSequences, 6, aa, getPropA(sequence[aa])])
-            data.append([numSequences, 7, aa, getPropB(sequence[aa])])
             aa+= 1
         numSequences+= 1
-
-    sequences.close()
-
-    df = pd.DataFrame(data, columns= ['seqID', 'dimension', 'aaNum', 'value'])
-    currSeq = []
-    allSeq = []
-    for row in df.index:
-        currSeq.append(float(df['value'][row]))
-        if df['aaNum'][row] == 9 and df['dimension'][row] == 7:
-            allSeq.append(np.asarray(currSeq))
-            currSeq = []
-
-    np.asarray(allSeq)
-    return allSeq
-
-#replacing high+low pka with prop A+B
-def prepFileReplace(dataFile):
-    sequences = open(dataFile, 'r')
-    reader = csv.reader(sequences, delimiter=',')
-    data = []
-    numSequences = 0
-    for row in reader:
-        sequence = row[0].lower()
-        aa = 0
-        while aa<10:
-            data.append([numSequences, 0, aa, getHydropathy(sequence[aa])])
-            data.append([numSequences, 1, aa, getIP(sequence[aa])])
-            data.append([numSequences, 2, aa, getMW(sequence[aa])])
-            data.append([numSequences, 3, aa, getNumPKA(sequence[aa])])
-            data.append([numSequences, 4, aa, getPropA(sequence[aa])])
-            data.append([numSequences, 5, aa, getPropB(sequence[aa])])
-            aa+= 1
-        numSequences+= 1
-
-    sequences.close()
 
     df = pd.DataFrame(data, columns= ['seqID', 'dimension', 'aaNum', 'value'])
     currSeq = []
@@ -535,38 +377,38 @@ def train(preppedData, configName):
 def testData(model, preppedData, labelFile):
     labels = np.loadtxt(labelFile, delimiter= ',')
     prediction = model.predict(preppedData)
-    
-    print('Test Results:')
-    print('True Labels: ' + str(labels))
-    print('Predicted Labels: ' + str(prediction))
     truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
-    print('True Positives: ' + str(truePos))
-    print('True Negatives: ' + str(trueNeg))
-    print('False Positives: ' + str(falsePos))
-    print('False Negatives: ' + str(falseNeg))
-    print('Recall: ' + str(recall_score(labels, prediction)))
-    print('Precision: ' + str(precision_score(labels, prediction)))
-    print('Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg)))
-    
-#TestData, but saves to a file
-def testDataSave(model, preppedData, labelFile, fname, testName):
-    save = open(fname+'.txt', 'a')
-    labels = np.loadtxt(labelFile, delimiter= ',')
-    prediction = model.predict(preppedData)
-    
-    save.write(testName+' Test Results:\n')
-    save.write('True Labels: ' + str(labels)+'\n')
-    save.write('Predicted Labels: ' + str(prediction)+'\n')
-    truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
-    save.write('True Positives: ' + str(truePos)+'\n')
-    save.write('True Negatives: ' + str(trueNeg)+'\n')
-    save.write('False Positives: ' + str(falsePos)+'\n')
-    save.write('False Negatives: ' + str(falseNeg)+'\n')
-    save.write('Recall: ' + str(recall_score(labels, prediction))+'\n')
-    save.write('Precision: ' + str(precision_score(labels, prediction))+'\n')
-    save.write('Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))+'\n\n')
 
-    save.close()
+    s1 = 'Test Results:'
+    s2 = '<br>True Labels: ' + str(labels)
+    s3 = '<br>Predicted Labels: ' + str(prediction)
+    s4 = '<br>True Positives: ' + str(truePos)
+    s5 = '<br>True Negatives: ' + str(trueNeg)
+    s6 = '<br>False Positives: ' + str(falsePos)
+    s7 = '<br>False Negatives: ' + str(falseNeg)
+    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
+    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
+    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
+    return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
+    
+def testSelfWeb(model, preppedData, numSequences):
+    labels = []
+    for label in range(numSequences):
+        labels.append(1)
+    prediction = model.predict(preppedData)
+    truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
+
+    s1 = 'Test Results:'
+    s2 = '<br>True Labels: ' + str(labels)
+    s3 = '<br>Predicted Labels: ' + str(prediction)
+    s4 = '<br>True Positives: ' + str(truePos)
+    s5 = '<br>True Negatives: ' + str(trueNeg)
+    s6 = '<br>False Positives: ' + str(falsePos)
+    s7 = '<br>False Negatives: ' + str(falseNeg)
+    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
+    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
+    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
+    return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
 
 #Creates a config file
 def createConfig(kernel='', gamma='', nu='', configName='config'):
@@ -585,12 +427,15 @@ def parseConfig(filename='config'):
         else:
             kernel = data['DEFAULT']['kernel']
         if data['USER INPUT']['gamma'] != '':
-            gamma = float(data['USER INPUT']['gamma'])
+            if data['USER INPUT']['gamma'] == 'scale':
+                gamma = data['USER INPUT']['gamma']
+            else:
+                gamma = float(data['USER INPUT']['gamma'])
         else:
             gamma = data['DEFAULT']['gamma']
         if data['USER INPUT']['nu'] != '':
             nu = data['USER INPUT']['nu']
         else:
-            nu = data['DEFAULT']['nu']
+            data['DEFAULT']['nu']
         
         return (kernel, gamma, float(nu))

@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>NES Model API</title>
+    </head>
+    <body>
+        <h1>Welcome to the NES Model Training Tool!</h1>
+        <h2>Introduction and Setup</h2>
+        <p>This tool uses machine learning to create models that predict whether or not a sequence of amino acids is a 
+            functional nuclear export sequence (NES). For machine learning to work, it needs to be trained. So, before you begin 
+            creating a model, make sure you have some sequences for the model to learn from in a csv formatted file with 
+            one sequence on each line. See this page for a tutorial on making a training file. </p>
+            
+        <p>This model requires some parameters to be set. These include a <i>kernel, gamma, </i>and <i>nu</i>.<br>
+          <br>The <i>kernel</i> is the function the model will use to transform the data.<br>
+            <i>Gamma</i> is a weight that controls the level of influence of the features on the model's fit.<br>
+            <img src= "/static/gammaExample.png" alt="Gamma Example" width="450" height="250">
+            <br>The aggressiveness of the fit increases as <i>gamma</i> decreases.<br>
+            <i>Nu</i> is the upper bound of the proportion of training values that the model can label as an incorrect group.<br>
+            <img src= "/static/nuExample.png" alt="Nu Example" width="450" height="250">
+        </p>
+
+        <p>Features of each amino in the sequence will be used to create the model. These features include:<br>
+        Hydropathy<br>
+        Isoelectric Point<br>
+        Molecular Weight<br>
+        Number of pKa Values<br>
+        Propensity to Be in an Alpha Helix<br>
+        Propensity to Be in a Beta Sheet</p>
+        
+
+        <form action="/createModel" method="POST" enctype="multipart/form-data">
+            Input the sequences you'd like to use for training: <br>
+            <input type="file" name="trainFile"><br>
+            Some parameters have been chosen through iterative testing as defaults.<br>
+            What would you like to set as the <i>kernel</i>? (default = rbf)<br>
+            The options are linear, poly, rbf(radial basis function), or sigmoid<br>
+            <input type="text" name="kernel" value="rbf"><br>
+            What would you like to use for <i>gamma</i>>? (default = 1/number of features)<br>
+            0&lt; <i>gamma</i> &lt;=1 <br>
+            <input type="text" name="gamma" value="scale"><br>
+            What would you like to use for <i>nu</i>? (default = 0.2)<br>
+            0&lt; <i>nu</i> &lt;=1 <br>
+            <input type="text" name="nu" value="0.2"><br><br>
+
+            <h2>Test and Evaluate Your Model</h2><br>
+            Choose the tests you'd like to run:<br>
+            <input type="checkbox" name="self">self<br>
+            <input type="checkbox" name="consensus">consensus<br>
+            <input type="checkbox" name="mixNES">mixNES<br>
+            <input type="checkbox" name="mixWithRandom">mixWithRandom<br>
+            <input type="checkbox" name="mixAll">mixAll<br>
+            <input type="checkbox" name="custom">custom<br>
+            <input type="file" name="testFile">Select your test sequence file (custom test only)<br>
+            <input type="file" name="testLabels">Select your test label file (custom test only)<br>
+
+            <br><h2>Predict Using Your Model</h2><br>
+
+            <br><input type="submit" value="Submit">
+        </form>
+
+    </body>
+</html>
