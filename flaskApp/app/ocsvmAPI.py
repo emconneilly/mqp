@@ -410,6 +410,27 @@ def testSelfWeb(model, preppedData, numSequences):
     s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
     return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
 
+# Uses prepped data and a model to make a prediction
+def predict(model, preppedData, miniSequences):
+    prediction = model.predict(preppedData)
+    sequences = miniSequences.split(',')
+    functional = ''
+    for i in range(0, len(prediction)):
+        if prediction[i] == 1:
+            functional+=', '+sequences[i]
+    return functional[1:]
+
+
+# Turns a sequence string into an API recognizable csv
+def getSequencesFromString(fullSequence):
+    start = 0
+    miniSequences = fullSequence[start:start+10]
+    start+= 1
+    while start+9 < len(fullSequence):
+        miniSequences+= ', '+fullSequence[start:start+10]
+        start+=1
+    return miniSequences
+
 #Creates a config file
 def createConfig(kernel='', gamma='', nu='', configName='config'):
     data = {'DEFAULT': {'kernel':'rbf', 'gamma':'scale', 'nu':'0.2'}}
