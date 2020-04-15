@@ -8,7 +8,7 @@
         <p>This tool uses machine learning to create models that predict whether or not a sequence of amino acids is a 
             functional nuclear export sequence (NES). For machine learning to work, it needs to be trained. So, before you begin 
             creating a model, make sure you have some sequences for the model to learn from in a csv formatted file with 
-            one sequence on each line. See this page for a tutorial on making a training file. </p>
+            one 10 amino acid sequence on each line. See this page for a tutorial on making a training file. </p>
             
         <p>This model requires some parameters to be set. These include a <i>kernel, gamma, </i>and <i>nu</i>.<br>
           <br>The <i>kernel</i> is the function the model will use to transform the data.<br>
@@ -30,7 +30,7 @@
 
         <form action="/createModel" method="POST" enctype="multipart/form-data">
             Input the sequences you'd like to use for training: <br>
-            <input type="file" name="trainFile"><br>
+            <input type="file" name="trainFile" accept=".csv" required><br>
             Some parameters have been chosen through iterative testing as defaults.<br>
             What would you like to set as the <i>kernel</i>? (default = rbf)<br>
             The options are linear, poly, rbf(radial basis function), or sigmoid<br>
@@ -43,7 +43,7 @@
             <input type="text" name="nu" value="0.2"><br><br>
 
             <h2>Test and Evaluate Your Model</h2><br>
-            Do not select any tests if you are using this model for prediction.<br>
+            <b>Do not select any tests if you are using this model for prediction.</b><br>
             Choose the tests you'd like to run:<br>
             <input type="checkbox" name="self">self<br>
             <input type="checkbox" name="consensus">consensus<br>
@@ -51,8 +51,8 @@
             <input type="checkbox" name="mixWithRandom">mixWithRandom<br>
             <input type="checkbox" name="mixAll">mixAll<br>
             <input type="checkbox" name="custom">custom<br>
-            <input type="file" name="testFile">Select your test sequence file (custom test only)<br>
-            <input type="file" name="testLabels">Select your test label file (custom test only)<br>
+            <input type="file" name="testFile" accept=".csv">Select your test sequence file (custom test only)<br>
+            <input type="file" name="testLabels" accept=".csv">Select your test label file (custom test only)<br>
 
             <br><h2>Predict Using Your Model</h2><br>
             Enter the sequence you'd like to predict NESs from (must be at least 10 amino acids in length):<br>
