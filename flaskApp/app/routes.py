@@ -13,11 +13,11 @@ def home():
 def createModel():
     error = ''
     training = request.files['trainFile']
-    # Save the file to uploads
-    file_name = training.filename
     # Check that uploads folder exists
     if not(os.path.isdir('uploads/')):
         os.mkdir('uploads/')
+    # Save the file to uploads
+    file_name = training.filename
     file_path = os.path.join('uploads/', file_name)
     training.save(file_path)
     # Create config

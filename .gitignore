@@ -2,6 +2,7 @@
 *.py[cod]
 /flaskApp/uploads
 /.vscode
+/flaskApp/config.json
 /flaskApp/build
 /flaskApp/dist
 /flaskApp/flaskApp.spec

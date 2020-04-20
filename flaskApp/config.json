@@ -1,1 +1,0 @@
-{"DEFAULT": {"kernel": "rbf", "gamma": "scale", "nu": "0.2"}, "USER INPUT": {"kernel": "rbf", "gamma": "scale", "nu": "0.2"}}
