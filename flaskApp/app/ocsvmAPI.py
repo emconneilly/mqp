@@ -12,6 +12,7 @@ import pandas as pd
 from sklearn.svm import OneClassSVM
 from sklearn.metrics import f1_score, precision_score, recall_score
 import json
+import re
 
 # Define values associated with each amino acid
 def getHydropathy(aa):
@@ -278,6 +279,20 @@ def getHighPKA(aa):
     else:
         return ''
 
+## Checks if sequence file is properly formatted
+def fileMalformed(dataFile):
+    sequences = open(dataFile, 'r')
+    reader = csv.reader(sequences, delimiter=',')
+    numSequences = 0
+    for row in reader:
+        if (len(row[0]) != 10) or re.match(r"[^acdefghiklmnpqrstvwy]+", row[0].lower()) != None:
+            return True
+        numSequences+=1
+    if numSequences<2:
+        return True
+    else:
+        return False
+
 # Takes in the filename of the dataset, filename of the labels, and training parameters
 # Returns a dataframe of the dataset features and the model
 def prepFile(dataFile):
@@ -361,6 +376,31 @@ def confusionMatrix(trueLabels, predLabels):
                 falsePos+= 1
     return truePos, trueNeg, falsePos, falseNeg
 
+# Takes in a set of true labels and predicted labels and a sequence file and returns
+# lists of false positives, false negatives, true positives, and true negatives
+def confusionMatrixList(trueLabels, predLabels, sequenceFile):
+    sequences = open(sequenceFile, 'r')
+    reader = csv.reader(sequences, delimiter=',')
+    falsePosList = ''
+    falseNegList = ''
+    truePosList = '' 
+    trueNegList = ''
+    i = 0
+    for row in reader:
+        if trueLabels[i] == predLabels[i]:
+            if trueLabels[i] == 1:
+                trueNegList+= '<br>'+row[0].upper()
+            else:
+                truePosList+=  '<br>'+row[0].upper()
+        else:
+            if trueLabels[i] == 1:
+                falseNegList+=  '<br>'+row[0].upper()
+            else:
+                falsePosList+=  '<br>'+row[0].upper()
+        i+=1
+
+    return falsePosList[4:], falseNegList[4:], truePosList[4:], trueNegList[4:]
+
 # Takes in prepped data, filename of labelFile, and optional training parameters
 # parameters default to the best performing all NES model
 # Creates a results summary file returns the trained model
@@ -374,41 +414,29 @@ def train(preppedData, configName):
 
 #Takes in model, prepped test data, filename of the labels for the test data
 #Prints a results summary for the performance of the model on the test data
-def testData(model, preppedData, labelFile):
+def testData(model, preppedData, labelFile, unpreppedData):
     labels = np.loadtxt(labelFile, delimiter= ',')
     prediction = model.predict(preppedData)
     truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
+# display variables
+    accuracy = str(((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))*100)
+    falsePosList, falseNegList, truePosList, trueNegList = confusionMatrixList(labels, prediction, unpreppedData)
 
-    s1 = 'Test Results:'
-    s2 = '<br>True Labels: ' + str(labels)
-    s3 = '<br>Predicted Labels: ' + str(prediction)
-    s4 = '<br>True Positives: ' + str(truePos)
-    s5 = '<br>True Negatives: ' + str(trueNeg)
-    s6 = '<br>False Positives: ' + str(falsePos)
-    s7 = '<br>False Negatives: ' + str(falseNeg)
-    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
-    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
-    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
-    return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
+
+    return accuracy, falsePosList, falseNegList, truePosList, trueNegList
     
-def testSelfWeb(model, preppedData, numSequences):
+def testSelfWeb(model, preppedData, numSequences, unpreppedData):
     labels = []
     for label in range(numSequences):
         labels.append(1)
     prediction = model.predict(preppedData)
     truePos, trueNeg, falsePos, falseNeg = confusionMatrix(labels, prediction)
+# display variables
+    accuracy = str("{:.2f}".format(((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))*100))
+    falsePosList, falseNegList, truePosList, trueNegList = confusionMatrixList(labels, prediction, unpreppedData)
 
-    s1 = 'Test Results:'
-    s2 = '<br>True Labels: ' + str(labels)
-    s3 = '<br>Predicted Labels: ' + str(prediction)
-    s4 = '<br>True Positives: ' + str(truePos)
-    s5 = '<br>True Negatives: ' + str(trueNeg)
-    s6 = '<br>False Positives: ' + str(falsePos)
-    s7 = '<br>False Negatives: ' + str(falseNeg)
-    s8 = '<br>Recall: ' + str(recall_score(labels, prediction))
-    s9 = '<br>Precision: ' + str(precision_score(labels, prediction))
-    s10 = '<br>Accuracy: ' + str((truePos+trueNeg)/(truePos+trueNeg+falsePos+falseNeg))
-    return s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
+
+    return accuracy, falsePosList, falseNegList, truePosList, trueNegList
 
 # Uses prepped data and a model to make a prediction
 def predict(model, preppedData, miniSequences):
@@ -417,8 +445,8 @@ def predict(model, preppedData, miniSequences):
     functional = ''
     for i in range(0, len(prediction)):
         if prediction[i] == 1:
-            functional+=', '+sequences[i]
-    return functional[1:]
+            functional+='<br>'+str(i+1)+' '+sequences[i]+' '+str(i+10)
+    return functional[4:]
 
 
 # Turns a sequence string into an API recognizable csv
