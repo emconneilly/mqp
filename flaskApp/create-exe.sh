@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pyinstaller -F --add-data "app/templates:app/templates" --add-data "app/static:app/static" --hidden-import "pkg_resources.py2_warn" --hidden-import "sklearn.utils._cython_blas" flaskApp.py 
