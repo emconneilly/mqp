@@ -1,0 +1,1 @@
+pyinstaller -F --add-data "app/templates;app/templates" --add-data "app/static;app/static" --hidden-import "pkg_resources.py2_warn" --hidden-import "sklearn.utils._cython_blas" --paths C:\Users\erinc\AppData\Local\Programs\Python\Python38-32\Lib\site-packages\sklearn\.libs flaskApp.py 
