@@ -3,11 +3,21 @@ from flask import render_template, request, redirect
 from app import ocsvmAPI as api
 import os
 import re
+import sys
 
 @app.route('/')
 @app.route('/home')
 def home():
     return render_template('home.html')
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+
 
 @app.route('/createModel', methods = ['POST'])
 def createModel():
@@ -43,26 +53,26 @@ def createModel():
             result = {'accuracy':accuracy, 'falsePos':falsePos, 'falseNeg':falseNeg, 'truePos':truePos, 'trueNeg':trueNeg, 'testType':testType}
             results.append(result)
         if 'consensus' in request.form:
-            consensus, numSequences = api.prepFile('app/static/consensusTest.csv')
-            accuracy, falsePos, falseNeg, truePos, trueNeg = api.testData(model, consensus, 'app/static/consensusTestLabels.csv', 'app/static/consensusTest.csv')
+            consensus, numSequences = api.prepFile(resource_path('app/static/consensusTest.csv'))
+            accuracy, falsePos, falseNeg, truePos, trueNeg = api.testData(model, consensus, resource_path('app/static/consensusTestLabels.csv'), resource_path('app/static/consensusTest.csv'))
             testType = "consensus"
             result = {'accuracy':accuracy, 'falsePos':falsePos, 'falseNeg':falseNeg, 'truePos':truePos, 'trueNeg':trueNeg, 'testType':testType}
             results.append(result)
         if 'mixNES' in request.form:
-            mixNES, numSequences = api.prepFile('app/static/mixNESTest.csv')
-            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixNES, 'app/static/mixNESTestLabels.csv', 'app/static/mixNESTest.csv')
+            mixNES, numSequences = api.prepFile(resource_path('app/static/mixNESTest.csv'))
+            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixNES, resource_path('app/static/mixNESTestLabels.csv'), resource_path('app/static/mixNESTest.csv'))
             testType = "mixNES"
             result = {'accuracy':accuracy, 'falsePos':falsePos, 'falseNeg':falseNeg, 'truePos':truePos, 'trueNeg':trueNeg, 'testType':testType}
             results.append(result)
         if 'mixWithRandom' in request.form:
-            mixWithRandom, numSequences = api.prepFile('app/static/mixWithRandomTest.csv')
-            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixWithRandom, 'app/static/mixWithRandomTestLabels.csv', 'app/static/mixWithRandomTest.csv')
+            mixWithRandom, numSequences = api.prepFile(resource_path('app/static/mixWithRandomTest.csv'))
+            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixWithRandom, resource_path('app/static/mixWithRandomTestLabels.csv'), resource_path('app/static/mixWithRandomTest.csv'))
             testType = "mixWithRandom"
             result = {'accuracy':accuracy, 'falsePos':falsePos, 'falseNeg':falseNeg, 'truePos':truePos, 'trueNeg':trueNeg, 'testType':testType}
             results.append(result)
         if 'mixAll' in request.form:
-            mixAll, numSequences = api.prepFile('app/static/mixAllTest.csv')
-            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixAll, 'app/static/mixAllTestLabels.csv', 'app/static/mixAllTest.csv')
+            mixAll, numSequences = api.prepFile(resource_path('app/static/mixAllTest.csv'))
+            accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, mixAll, resource_path('app/static/mixAllTestLabels.csv'), resource_path('app/static/mixAllTest.csv'))
             testType = "mixAll"
             result = {'accuracy':accuracy, 'falsePos':falsePos, 'falseNeg':falseNeg, 'truePos':truePos, 'trueNeg':trueNeg, 'testType':testType}
             results.append(result)
