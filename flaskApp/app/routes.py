@@ -32,11 +32,26 @@ def createModel():
     training.save(file_path)
     # Create config
     kernel = request.form['kernel']
+    if not kernel in ['rbf', 'linear', 'poly', 'sigmoid']:
+        error += "<br>Your kernel is not one of the specified options."
     gamma = request.form['gamma']
+    if gamma != 'scale':
+        try:
+            gamma_num = float(gamma)
+            if gamma_num < 0 or gamma_num > 1:
+                error += "<br>Your gamma is not in the range specified."
+        except Exception:
+            error += "<br>Your gamma is not a number."
     nu = request.form['nu']
+    try:
+        nu_num = float(nu)
+        if nu_num < 0 or nu_num > 1:
+            error += "<br>Your nu is not in the range specified."
+    except Exception:
+        error += "<br>Your nu is not a number."
     # Check and prep file
     if api.fileMalformed(file_path):
-        error+="\nTraining file was malformed."
+        error+="<br>Training file was malformed."
     train, numSequences = api.prepFile(file_path)
     config = api.createConfig(kernel, gamma, nu)
     # Train Model
@@ -81,14 +96,22 @@ def createModel():
             testLabels = request.files['testLabels']
             # Save custom input to uploads
             testFile_name = testFile.filename
-            testFile_path = os.path.join('uploads/', testFile_name)
-            testFile.save(testFile_path)
             testLabels_name = testLabels.filename
-            testLabels_path = os.path.join('uploads/', testLabels_name)
-            testLabels.save(testLabels_path)
+            if testFile_name == '':
+                error+="<br>You selected a custom test, but did not upload a test sequence file."
+            if testLabels_name == '':
+                error+="<br>You selected a custom test, but did not upload a test label file."
+            if len(error)==0:
+                testFile_path = os.path.join('uploads/', testFile_name)
+                testFile.save(testFile_path)
+                testLabels_name = testLabels.filename
+                testLabels_path = os.path.join('uploads/', testLabels_name)
+                testLabels.save(testLabels_path)
+            else:
+                return render_template('error.html', error=error)
             # Run test
             if api.fileMalformed(testFile_path):
-                error+="\nCustom sequence test file was malformed."
+                error+="<br>Custom sequence test file was malformed."
             else:
                 custom, numSequences = api.prepFile(testFile_path)
                 accuracy, falsePos, falseNeg, truePos, trueNeg  = api.testData(model, custom, testLabels_path, testFile_path)
@@ -100,9 +123,9 @@ def createModel():
     # If predicting, read in sequence and predict sequences
     inputSequence = request.form['predictSequence']
     if len(inputSequence)<10:
-        error+="\nYour prediction sequence is too short. Please input a sequence at least 10 amino acids."
+        error+="<br>Your prediction sequence is too short. Please input a sequence at least 10 amino acids."
     if re.search(r"[^acdefghiklmnpqrstvwy]+", inputSequence.lower()) != None:
-        error+="\nYour prediction sequence has characters that do not denote amino acids. It may be helpful to check for line breaks and other symbols."
+        error+="<br>Your prediction sequence has characters that do not denote amino acids. It may be helpful to check for line breaks and other symbols."
     if len(error)==0:
         miniSequences = api.getSequencesFromString(request.form['predictSequence'])
         preppedPredict = api.prepText(miniSequences)

@@ -489,4 +489,5 @@ def parseConfig(filename='config'):
         else:
             data['DEFAULT']['nu']
         
+        
         return (kernel, gamma, float(nu))
