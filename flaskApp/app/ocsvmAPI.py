@@ -191,91 +191,91 @@ def getNumPKA(aa):
     else:
         return ''
 
-def getLowPKA(aa):
+def getPropA(aa):
     if aa == 'a':
-        return '2.35'
+        return '1.42'
     elif aa == 'r':
-        return '2.18'
+        return '0.98'
     elif aa == 'n':
-        return '2.02'
+        return '0.67'
     elif aa == 'd':
-        return '1.88'
+        return '1.01'
     elif aa == 'c':
-        return '1.71'
+        return '0.70'
     elif aa == 'e':
-        return '2.19'
+        return '1.11'
     elif aa == 'q':
-        return '2.17'
+        return '1.51'
     elif aa == 'g':
-        return '2.34'
+        return '0.57'
     elif aa == 'h':
-        return '1.78'
+        return '1.00'
     elif aa == 'i':
-        return '2.32'
+        return '1.08'
     elif aa == 'l':
-        return '2.36'
+        return '1.21'
     elif aa == 'k':
-        return '2.2'
+        return '1.16'
     elif aa == 'm':
-        return '2.28'
+        return '1.45'
     elif aa == 'f':
-        return '2.58'
+        return '1.13'
     elif aa == 'p':
-        return '1.99'
+        return '0.57'
     elif aa == 's':
-        return '2.21'
+        return '0.77'
     elif aa == 't':
-        return '2.15'
+        return '0.83'
     elif aa == 'w':
-        return '2.38'
+        return '1.08'
     elif aa == 'y':
-        return '2.2'
+        return '0.69'
     elif aa == 'v':
-        return '2.29'
+        return '1.06'
     else:
         return ''
 
-def getHighPKA(aa):
+def getPropB(aa):
     if aa == 'a':
-        return '9.87'
+        return '0.83'
     elif aa == 'r':
-        return '13.2'
+        return '0.93'
     elif aa == 'n':
-        return '8.8'
+        return '0.89'
     elif aa == 'd':
-        return '9.6'
+        return '0.54'
     elif aa == 'c':
-        return '10.78'
+        return '1.19'
     elif aa == 'e':
-        return '9.67'
+        return '1.10'
     elif aa == 'q':
-        return '9.13'
+        return '0.37'
     elif aa == 'g':
-        return '9.6'
+        return '0.75'
     elif aa == 'h':
-        return '8.97'
+        return '0.87'
     elif aa == 'i':
-        return '9.76'
+        return '1.60'
     elif aa == 'l':
-        return '9.6'
+        return '1.30'
     elif aa == 'k':
-        return '10.28'
+        return '0.74'
     elif aa == 'm':
-        return '9.21'
+        return '1.05'
     elif aa == 'f':
-        return '9.24'
+        return '1.38'
     elif aa == 'p':
-        return '10.6'
+        return '0.55'
     elif aa == 's':
-        return '9.15'
+        return '0.75'
     elif aa == 't':
-        return '9.12'
+        return '1.19'
     elif aa == 'w':
-        return '9.39'
+        return '1.37'
     elif aa == 'y':
-        return '10.1'
+        return '1.47'
     elif aa == 'v':
-        return '9.72'
+        return '1.70'
     else:
         return ''
 
@@ -310,8 +310,8 @@ def prepFile(dataFile):
             data.append([numSequences, 1, aa, getIP(sequence[aa])])
             data.append([numSequences, 2, aa, getMW(sequence[aa])])
             data.append([numSequences, 3, aa, getNumPKA(sequence[aa])])
-            data.append([numSequences, 4, aa, getLowPKA(sequence[aa])])
-            data.append([numSequences, 5, aa, getHighPKA(sequence[aa])])
+            data.append([numSequences, 4, aa, getPropA(sequence[aa])])
+            data.append([numSequences, 5, aa, getPropB(sequence[aa])])
             aa+= 1
         numSequences+= 1
 
@@ -341,8 +341,8 @@ def prepText(dataFile):
             data.append([numSequences, 1, aa, getIP(sequence[aa])])
             data.append([numSequences, 2, aa, getMW(sequence[aa])])
             data.append([numSequences, 3, aa, getNumPKA(sequence[aa])])
-            data.append([numSequences, 4, aa, getLowPKA(sequence[aa])])
-            data.append([numSequences, 5, aa, getHighPKA(sequence[aa])])
+            data.append([numSequences, 4, aa, getPropA(sequence[aa])])
+            data.append([numSequences, 5, aa, getPropB(sequence[aa])])
             aa+= 1
         numSequences+= 1
 
